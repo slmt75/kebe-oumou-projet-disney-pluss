@@ -1,0 +1,806 @@
+/* ================================================
+   DISNEY+ - style.css
+   Projet BTS SIO - 2ème année
+   Ce fichier est partagé entre la page française
+   et la page anglaise (index.html et index-en.html)
+   ================================================ */
+
+
+/* ------------------------------------------------
+   1. VARIABLES CSS
+   On définit ici nos couleurs et polices une seule fois.
+   On peut ensuite les réutiliser partout avec var(--nom).
+   Si on veut changer une couleur, on n'a qu'un seul endroit à modifier.
+   ------------------------------------------------ */
+:root {
+    --couleur-fond:          #040714;              /* fond sombre principal */
+    --couleur-fond-alt:      #0b1020;              /* fond légèrement plus clair */
+    --couleur-carte:         #0f1929;              /* fond des cartes / tableau */
+    --couleur-cyan:          #02D6E8;              /* couleur principale de la marque */
+    --couleur-cyan-fonce:    #136878;              /* cyan foncé pour boutons secondaires */
+    --couleur-cyan-survol:   #10B5C5;              /* cyan au survol */
+    --couleur-texte:         rgb(192, 192, 192);   /* texte principal (gris clair) */
+    --couleur-blanc:         #ffffff;
+    --couleur-bordure:       rgba(255, 255, 255, 0.1); /* bordure blanche subtile */
+
+    --police-principale: 'Montserrat', sans-serif;
+    --taille-police-base: 18px;
+    --hauteur-ligne-base: 25px;
+}
+
+
+/* ------------------------------------------------
+   2. RESET ET STYLES DE BASE
+   On supprime les marges/paddings par défaut du navigateur
+   et on applique nos propres règles de base.
+   ------------------------------------------------ */
+
+/* Applique box-sizing à tous les éléments : le padding ne s'ajoute plus à la largeur */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Défilement fluide lors des clics sur des ancres (#id) */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Styles de base du body */
+body {
+    background-color: var(--couleur-fond);
+    color: var(--couleur-texte);
+    font-family: var(--police-principale), sans-serif;
+    font-size: var(--taille-police-base);
+    line-height: var(--hauteur-ligne-base);
+    overflow-x: hidden; /* empêche le défilement horizontal */
+}
+
+/* Supprime le soulignement de tous les liens par défaut */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Les images ne dépassent jamais leur conteneur */
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
+/* ------------------------------------------------
+   3. BARRE DE NAVIGATION
+   Positionnée en haut, reste visible en défilant.
+   ------------------------------------------------ */
+.navbar {
+    position: fixed;        /* reste en haut même quand on défile */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;           /* au-dessus de tous les autres éléments */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 48px;
+    /* Dégradé qui passe du sombre au transparent vers le bas */
+    background: linear-gradient(to bottom, rgba(4, 7, 20, 0.95), transparent);
+    backdrop-filter: blur(4px); /* effet verre dépoli */
+}
+
+/* Logo Disney+ dans la navbar */
+.navbar-logo .logo-img {
+    height: 36px;
+    object-fit: contain;
+    mix-blend-mode: screen; /* supprime le fond noir du PNG */
+}
+
+/* Partie droite de la navbar */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Bouton de langue (EN ou FR) */
+.lang-btn {
+    background: transparent;
+    border: 1px solid var(--couleur-bordure);
+    color: var(--couleur-texte);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: var(--police-principale);
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block; /* nécessaire pour les balises <a> */
+    text-align: center;
+}
+
+/* Bouton langue au survol */
+.lang-btn:hover {
+    border-color: var(--couleur-cyan);
+    color: var(--couleur-cyan);
+}
+
+/* Bouton S'identifier */
+.btn-signin {
+    background-color: var(--couleur-cyan-fonce);
+    color: var(--couleur-blanc);
+    border: none;
+    padding: 10px 22px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--police-principale);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-signin:hover {
+    background-color: var(--couleur-cyan);
+}
+
+
+/* ------------------------------------------------
+   4. SECTION HERO
+   Section plein écran avec fond d'affiches.
+   ------------------------------------------------ */
+.hero {
+    position: relative;
+    min-height: 100vh;          /* prend toute la hauteur de l'écran */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 20px 80px;
+    overflow: hidden;           /* cache ce qui dépasse */
+}
+
+/* Image de fond (grille d'affiches) */
+.hero-bg {
+    position: absolute;
+    inset: 0;   /* équivalent à top/right/bottom/left: 0 */
+    background: url('assets/hero-bg-posters.jpeg') center top / cover no-repeat;
+    opacity: 0.6;
+}
+
+/* Calque sombre par-dessus l'image de fond */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    /* Double dégradé : assombrit en haut, s'éclaircit au milieu, noircit en bas */
+    background:
+        linear-gradient(to bottom, rgba(4, 7, 20, 0.7) 0%, rgba(4, 7, 20, 0.3) 40%, rgba(4, 7, 20, 0.6) 70%, rgba(4, 7, 20, 1) 100%),
+        radial-gradient(ellipse at center, transparent 30%, rgba(4, 7, 20, 0.5) 100%);
+}
+
+/* Contenu du hero (au-dessus du calque) */
+.hero-content {
+    position: relative;
+    z-index: 2;         /* s'affiche au-dessus du fond et du calque */
+    max-width: 680px;
+}
+
+/* Logo Disney+ dans le hero */
+.hero-logo {
+    height: 110px;
+    object-fit: contain;
+    margin: 0 auto 24px;
+    mix-blend-mode: screen; /* supprime le fond noir du PNG */
+}
+
+/* Titre principal H1 */
+.hero-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--couleur-blanc);
+    line-height: 1.25;
+    margin-bottom: 16px;
+}
+
+/* Sous-titre */
+.hero-subtitle {
+    font-size: 16px;
+    color: var(--couleur-texte);
+    margin-bottom: 32px;
+}
+
+/* Formulaire e-mail + bouton */
+.hero-form {
+    display: flex;
+    gap: 12px;
+    max-width: 480px;
+    margin: 0 auto 16px;
+}
+
+/* Champ de saisie e-mail */
+.hero-input {
+    flex: 1; /* prend tout l'espace disponible */
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--couleur-blanc);
+    padding: 14px 18px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-family: var(--police-principale);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.hero-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Bordure cyan quand le champ est actif (focus) */
+.hero-input:focus {
+    border-color: var(--couleur-cyan);
+}
+
+/* Bouton principal cyan (S'inscrire / Sign Up) */
+.btn-primary {
+    background-color: var(--couleur-cyan);
+    color: var(--couleur-fond);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--police-principale);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    white-space: nowrap;        /* empêche le retour à la ligne */
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+    background-color: var(--couleur-cyan-survol);
+    transform: scale(1.02); /* légèrement agrandi au survol */
+}
+
+/* Note sous le formulaire */
+.hero-note {
+    font-size: 13px;
+    color: rgba(192, 192, 192, 0.7);
+}
+
+/* Flèche de défilement vers le bas */
+.hero-scroll {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%); /* centrage horizontal */
+    z-index: 2;
+    cursor: pointer;
+    animation: rebond 2s infinite; /* animation de rebond */
+}
+
+/* Filtre CSS pour colorier la flèche en cyan */
+.scroll-arrow {
+    width: 32px;
+    height: 32px;
+    filter: invert(1) sepia(1) saturate(3) hue-rotate(155deg);
+    opacity: 0.7;
+}
+
+/* Animation de rebond (monte et descend en boucle) */
+@keyframes rebond {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+
+/* ------------------------------------------------
+   5. SECTION SEULEMENT SUR DISNEY+
+   ------------------------------------------------ */
+.only-section {
+    padding: 80px 48px;
+    background-color: var(--couleur-fond);
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* En-tête : icône Disney + titre côte à côte */
+.only-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.only-icon {
+    height: 36px;
+    object-fit: contain;
+}
+
+/* Texte descriptif */
+.only-text {
+    font-size: 15px;
+    color: var(--couleur-texte);
+    margin-bottom: 24px;
+}
+
+/* Grande image Shōgun / grille d'affiches */
+.only-image {
+    width: 100%;
+    border-radius: 12px;
+}
+
+
+/* ------------------------------------------------
+   6. STYLES DE SECTION RÉUTILISABLES
+   Utilisés dans plusieurs sections différentes.
+   ------------------------------------------------ */
+
+/* Titre de section */
+.section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--couleur-blanc);
+    margin-bottom: 12px;
+}
+
+/* Variante centrée */
+.section-title.center {
+    text-align: center;
+}
+
+/* Sous-titre de section */
+.section-subtitle {
+    font-size: 15px;
+    color: var(--couleur-texte);
+    margin-bottom: 40px;
+}
+
+.section-subtitle.center {
+    text-align: center;
+}
+
+
+/* ------------------------------------------------
+   7. SECTION ABONNEMENTS
+   Tableau comparatif des formules.
+   ------------------------------------------------ */
+.pricing-section {
+    padding: 80px 48px;
+    background-color: var(--couleur-fond-alt);
+}
+
+/* Le tableau utilise CSS Grid avec 4 colonnes */
+.pricing-table {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr 1fr; /* colonne label + 3 formules */
+    max-width: 900px;
+    margin: 0 auto;
+    border: 1px solid var(--couleur-bordure);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Chaque ligne du tableau */
+.pricing-row {
+    display: contents; /* les enfants se comportent comme des cellules de la grille */
+}
+
+/* Chaque cellule du tableau */
+.pricing-cell {
+    padding: 16px;
+    border-bottom: 1px solid var(--couleur-bordure);
+    font-size: 13px;
+    color: var(--couleur-texte);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Colonne de gauche : labels des caractéristiques */
+.label-cell {
+    justify-content: flex-start;
+    font-weight: 600;
+    color: var(--couleur-blanc);
+    background: rgba(255, 255, 255, 0.02);
+    padding-left: 20px;
+    gap: 6px; /* espace entre le texte et l'icône info */
+}
+
+/* Cellules d'en-tête (noms des formules) */
+.header-row .pricing-cell {
+    background-color: var(--couleur-carte);
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--couleur-blanc);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-right: 1px solid var(--couleur-bordure);
+}
+
+/* Colonne Premium : mise en avant */
+.featured-cell {
+    background: rgba(2, 214, 232, 0.04);
+}
+
+/* En-tête de la colonne Premium */
+.header-row .featured-cell {
+    background: linear-gradient(135deg, var(--couleur-cyan-fonce) 0%, #052530 100%);
+    color: var(--couleur-cyan) !important; /* force la couleur cyan */
+    border: 2px solid var(--couleur-cyan);
+}
+
+/* Prix en grand */
+.price {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--couleur-cyan);
+}
+
+/* "/mois" à côté du prix */
+.price-period {
+    font-size: 11px;
+    color: var(--couleur-texte);
+    margin-left: 3px;
+}
+
+/* Texte cyan pour les valeurs de la colonne Premium */
+.cyan-text {
+    color: var(--couleur-cyan);
+}
+
+/* Icône de coche (checkmark) */
+.check-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Tiret pour une fonctionnalité non disponible */
+.dash {
+    color: var(--couleur-texte);
+    opacity: 0.4;
+}
+
+/* Icône info avec changement d'image au survol */
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.info-icon .info-default { width: 16px; height: 16px; }
+.info-icon .info-hover   { width: 16px; height: 16px; display: none; }
+
+/* Au survol : cache l'image par défaut, affiche l'image hover */
+.info-icon:hover .info-default { display: none; }
+.info-icon:hover .info-hover   { display: inline; }
+
+/* Note légale sous le tableau */
+.pricing-note {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(192, 192, 192, 0.4);
+    margin-top: 16px;
+}
+
+
+/* ------------------------------------------------
+   8. SECTION REGARDEZ PARTOUT
+   ------------------------------------------------ */
+.watch-section {
+    padding: 80px 48px;
+    text-align: center;
+}
+
+/* Image des appareils */
+.devices-image {
+    width: 100%;
+    max-width: 900px;
+    border-radius: 12px;
+    margin: 0 auto 48px;
+}
+
+/* Grille de 3 colonnes pour les avantages */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Chaque bloc d'avantage : commence invisible, s'anime au défilement via JS */
+.feature-item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Icône de l'avantage */
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 0 auto 16px;
+}
+
+/* L'icône planète doit être colorée en cyan avec un filtre CSS */
+.globe-icon {
+    filter: invert(1) sepia(1) saturate(3) hue-rotate(155deg);
+    width: 64px;
+    height: 64px;
+}
+
+.feature-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--couleur-blanc);
+    margin-bottom: 8px;
+}
+
+.feature-text {
+    font-size: 13px;
+    color: var(--couleur-texte);
+    line-height: 1.6;
+}
+
+
+/* ------------------------------------------------
+   9. SECTION FAQ
+   Accordéon : une question à la fois peut être ouverte.
+   ------------------------------------------------ */
+
+/* La section est pleine largeur mais le contenu est limité */
+.faq-section {
+    background-color: var(--couleur-fond-alt);
+    padding: 80px 0;
+}
+
+.faq-section .section-title {
+    max-width: 800px;
+    margin: 0 auto 32px;
+    padding: 0 48px;
+}
+
+/* Chaque bloc question/réponse */
+.faq-item {
+    max-width: 800px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--couleur-bordure);
+    padding: 0 48px;
+}
+
+/* Bouton de la question (cliquable) */
+.faq-question {
+    width: 100%;
+    background: var(--couleur-carte);
+    border: none;
+    color: var(--couleur-blanc);
+    font-family: var(--police-principale);
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    padding: 20px 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.faq-question:hover {
+    background: rgba(2, 214, 232, 0.06);
+}
+
+/* Icône + à droite */
+.faq-icon {
+    color: var(--couleur-cyan);
+    font-size: 20px;
+    transition: transform 0.3s;
+}
+
+/* Fait pivoter le + en × quand la question est ouverte */
+.faq-question.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+/* Réponse : cachée par défaut */
+.faq-answer {
+    display: none;
+    padding: 16px 24px 24px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--couleur-texte);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 0 0 6px 6px;
+}
+
+/* Affiche la réponse quand la classe "open" est ajoutée par JS */
+.faq-answer.open {
+    display: block;
+}
+
+
+/* ------------------------------------------------
+   10. SECTION APPAREILS COMPATIBLES
+   ------------------------------------------------ */
+.devices-section {
+    padding: 80px 48px;
+    text-align: center;
+}
+
+/* Grille de 4 colonnes */
+.devices-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Chaque carte d'appareil : s'anime au défilement via JS */
+.device-card {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Icône de l'appareil */
+.device-icon {
+    width: 72px;
+    height: 52px;
+    object-fit: contain;
+    margin: 0 auto 12px;
+    mix-blend-mode: screen; /* supprime le fond noir des PNG */
+}
+
+/* La tablette a un fond noir à inverser (différent des autres) */
+.tablet-icon {
+    mix-blend-mode: normal;
+    filter: invert(1); /* inverse les couleurs : noir devient blanc */
+}
+
+.device-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--couleur-blanc);
+    margin-bottom: 8px;
+}
+
+/* Supprime les puces de liste par défaut */
+.device-list {
+    list-style: none;
+    font-size: 12px;
+    color: var(--couleur-texte);
+    line-height: 1.8;
+}
+
+
+/* ------------------------------------------------
+   11. PIED DE PAGE (FOOTER)
+   ------------------------------------------------ */
+.footer {
+    background-color: var(--couleur-fond-alt);
+    border-top: 1px solid var(--couleur-bordure);
+    padding: 48px;
+}
+
+/* Logo Disney+ dans le footer */
+.footer-logo {
+    height: 44px;
+    object-fit: contain;
+    margin-bottom: 24px;
+    mix-blend-mode: screen;
+}
+
+/* Liens de navigation du footer */
+.footer-links {
+    display: flex;
+    flex-wrap: wrap; /* retour à la ligne si pas assez de place */
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.footer-links a {
+    font-size: 13px;
+    color: var(--couleur-texte);
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--couleur-cyan);
+}
+
+/* Texte de copyright */
+.footer-copy {
+    font-size: 12px;
+    color: rgba(192, 192, 192, 0.4);
+    margin-bottom: 20px;
+}
+
+/* Logos OneTrust / confidentialité */
+.footer-trust {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.trust-logo {
+    height: 20px;
+    opacity: 0.5;
+}
+
+
+/* ------------------------------------------------
+   12. RESPONSIVE DESIGN (Media Queries)
+   On adapte la mise en page pour les petits écrans.
+   ------------------------------------------------ */
+
+/* Tablette : largeur max 900px */
+@media (max-width: 900px) {
+
+    /* Réduction des marges de la navbar */
+    .navbar {
+        padding: 12px 20px;
+    }
+
+    /* Titre hero plus petit */
+    .hero-title {
+        font-size: 24px;
+    }
+
+    /* Réduction des paddings généraux */
+    .only-section,
+    .pricing-section,
+    .watch-section,
+    .devices-section,
+    .footer {
+        padding: 60px 20px;
+    }
+
+    /* Tableau : colonnes plus étroites */
+    .pricing-table {
+        grid-template-columns: 130px 1fr 1fr 1fr;
+    }
+
+    /* Avantages : 1 colonne au lieu de 3 */
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    /* Appareils : 2 colonnes au lieu de 4 */
+    .devices-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile : largeur max 600px */
+@media (max-width: 600px) {
+
+    /* Formulaire en colonne verticale */
+    .hero-form {
+        flex-direction: column;
+    }
+
+    /* Bouton prend toute la largeur */
+    .btn-primary {
+        width: 100%;
+    }
+
+    /* Tableau : seulement 2 colonnes (label + standard + premium) */
+    .pricing-table {
+        grid-template-columns: 100px 1fr 1fr;
+    }
+
+    /* Logo navbar plus petit */
+    .navbar-logo .logo-img {
+        height: 28px;
+    }
+}
